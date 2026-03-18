@@ -27,44 +27,37 @@ public class JWTUtil {
     public String gerarToken(Usuario usuario) {
 
         return Jwts.builder()
-
                 .setSubject(usuario.getNomeUsuario())
-
                 .claim("role", usuario.getFuncao().name())
-
                 .setIssuedAt(new Date())
-
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-
                 .signWith(getKey(), SignatureAlgorithm.HS256)
-
                 .compact();
     }
 
-    public String extrairUsername(String token) {
+    public Claims extrairClaims(String token) {
 
-        Claims claims = Jwts.parserBuilder()
+        return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
 
-        return claims.getSubject();
+    public String extrairUsername(String token) {
+        return extrairClaims(token).getSubject();
+    }
+
+    public String extrairRole(String token) {
+        return extrairClaims(token).get("role", String.class);
     }
 
     public boolean validarToken(String token) {
 
         try {
-
-            Jwts.parserBuilder()
-                    .setSigningKey(getKey())
-                    .build()
-                    .parseClaimsJws(token);
-
+            extrairClaims(token);
             return true;
-
         } catch (Exception e) {
-
             return false;
         }
     }

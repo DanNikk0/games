@@ -1,6 +1,7 @@
 package com.Games.LojaGames.config;
 
 import com.Games.LojaGames.security.JWTAuthFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,12 +32,17 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-
                     .requestMatchers("/auth/login", "/auth/registrar").permitAll()
-
                     .requestMatchers("/h2-console/**").permitAll()
-
                     .anyRequest().authenticated()
+            )
+
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"erro\": \"Não autorizado\"}");
+                })
             )
 
             .addFilterBefore(
@@ -59,7 +65,6 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 }
