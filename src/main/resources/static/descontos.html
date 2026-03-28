@@ -17,6 +17,7 @@
         <th>Início</th>
         <th>Fim</th>
         <th>Criado Em</th>
+        <th>Status</th>
     </tr>
 
     <tr th:each="desconto : ${descontos}">
@@ -27,8 +28,11 @@
         <td th:text="${#temporals.format(desconto.inicioEm, 'dd/MM/yyyy HH:mm')}"></td>
         <td th:text="${#temporals.format(desconto.fimEm, 'dd/MM/yyyy HH:mm')}"></td>
         <td th:text="${#temporals.format(desconto.criadoEm, 'dd/MM/yyyy HH:mm')}"></td>
+
+        <td th:text="${desconto.ativo ? 'Ativo' : 'Inativo'}"></td>
     </tr>
 </table>
 
 </body>
+</html>
 </html>

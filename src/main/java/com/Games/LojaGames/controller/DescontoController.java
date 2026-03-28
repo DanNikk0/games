@@ -1,6 +1,5 @@
 package com.Games.LojaGames.controller;
 
-
 import com.Games.LojaGames.model.Desconto;
 import com.Games.LojaGames.repository.DescontoRepository;
 import org.springframework.http.MediaType;
@@ -8,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import java.util.List;
 
 import java.util.List;
 
@@ -34,6 +32,9 @@ public class DescontoController {
     )
     @ResponseBody
     public Desconto criar(@RequestBody Desconto desconto) {
+
+        desconto.setAtivo(true);
+
         return descontoRepository.save(desconto);
     }
 
@@ -65,4 +66,3 @@ public class DescontoController {
         return "descontos";
     }
 }
-

@@ -7,7 +7,6 @@ class DescontoUser(HttpUser):
     wait_time = between(1, 3)
 
     def on_start(self):
-        # LOGIN
         response = self.client.post(
             "/auth/login",
             json={
