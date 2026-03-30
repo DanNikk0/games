@@ -2,6 +2,7 @@ package com.Games.LojaGames.controller;
 
 import com.Games.LojaGames.model.Desconto;
 import com.Games.LojaGames.repository.DescontoRepository;
+import com.Games.LojaGames.jobs.DescontoJob;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,9 +16,11 @@ import java.util.List;
 public class DescontoController {
 
     private final DescontoRepository descontoRepository;
+    private final DescontoJob descontoJob;
 
-    public DescontoController(DescontoRepository descontoRepository) {
+    public DescontoController(DescontoRepository descontoRepository, DescontoJob descontoJob) {
         this.descontoRepository = descontoRepository;
+        this.descontoJob = descontoJob;
     }
 
     @GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
@@ -35,7 +38,11 @@ public class DescontoController {
 
         desconto.setAtivo(true);
 
-        return descontoRepository.save(desconto);
+        Desconto salvo = descontoRepository.save(desconto);
+
+        descontoJob.desativarDescontosExpirados();
+
+        return salvo;
     }
 
     @PutMapping(value = "/id/{id}", produces = MediaType.APPLICATION_XML_VALUE)

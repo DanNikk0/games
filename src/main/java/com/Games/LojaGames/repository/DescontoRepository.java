@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface DescontoRepository extends JpaRepository<Desconto, Long> {
 
-    List<Desconto> findByFimEmBeforeAndAtivoTrue(LocalDateTime agora);
+    List<Desconto> findAllByFimEmBeforeAndAtivoTrue(LocalDateTime agora);
 
 }

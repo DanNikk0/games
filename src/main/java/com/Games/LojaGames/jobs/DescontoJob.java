@@ -2,6 +2,7 @@ package com.Games.LojaGames.jobs;
 
 import com.Games.LojaGames.model.Desconto;
 import com.Games.LojaGames.repository.DescontoRepository;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +19,15 @@ public class DescontoJob {
     }
 
     @Scheduled(fixedRate = 3600000)
+    @Async
     public void desativarDescontosExpirados() {
 
         System.out.println("Verificando descontos expirados...");
 
         try {
             List<Desconto> descontosExpirados =
-                    descontoRepository.findByFimEmBeforeAndAtivoTrue(LocalDateTime.now());
-
+                    descontoRepository.findAllByFimEmBeforeAndAtivoTrue(LocalDateTime.now());
+                    
             for (Desconto desconto : descontosExpirados) {
                 desconto.setAtivo(false);
                 descontoRepository.save(desconto);
